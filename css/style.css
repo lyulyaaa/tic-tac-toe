@@ -36,7 +36,7 @@ td {
     .end {
         display: none;
         position: absolute;
-        top: 50%;
+        top: 430px;
         left: 50%;
         transform: translate(-50%, -50%);
         padding: 20px;
@@ -53,28 +53,50 @@ td {
     }
 
 
-    button {
-        display: inline-block;
-        background-color: #827af3;
-        color: white;
-        padding: 10px 20px;
-        font-size: 16px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+    /* Добавлены стили для радио-кнопок */
+.radio-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.radio-container label {
+    display: inline-block;
+    margin-right: 20px;
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    color: #333;
+}
+
+.radio-container input[type="radio"] {
+    margin-right: 5px;
+    transform: translateY(2px);
+}
+
+/* Изменены стили для кнопки */
+button {
+    display: block;
+    margin: 20px auto; /* Изменено */
+    background-color: #827af3;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
     
     button:hover {
         background-color: #4e6df8;
     }
 
     h2 {
-        margin-bottom: 10px;
+        margin-bottom: 35px; /* Добавляем отступ снизу */
         text-align: center;
-        font-family: 'Arial', sans-serif; /* Устанавливаем шрифт */
-        color: #333; /* Цвет текста */
-        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2); /* Добавляем тень тексту */
+        font-family: 'Arial', sans-serif;
+        color: #333;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
     }
     
     small {

@@ -21,28 +21,50 @@ brd = Array.from(Array(9).keys());
 for (var i = 0; i < cls.length; i++) {
 cls[i].innerText = '';
 cls[i].style.removeProperty('background-color');
-cls[i].addEventListener('click', play, false);
+var humanPlayer = document.querySelector('input[name="player"]:checked').value;
+if (humanPlayer === 'human') {
+	cls[i].removeEventListener('click', playComputer, false);
+	cls[i].addEventListener('click', playHuman, false);
+}
+else{
+	cls[i].removeEventListener('click', playHuman, false);
+	cls[i].addEventListener('click', playComputer, false);
+}
 }
 }
 
-function play(square) {
+function playHuman(square) {
     var currentPlayer = (brd.filter(s => typeof s == 'number').length % 2 == 0) ? pO : pX;
     if (typeof brd[square.target.id] == 'number') {
-        takeTurn(square.target.id, currentPlayer);
+        takeTurnHuman(square.target.id, currentPlayer);
         let winResult = checkWin(brd, currentPlayer);
         if (winResult) {
-            gameOver(winResult);
+            gameOverHuman(winResult);
         } else {
-            checkDraw();
+            checkDrawHuman();
         }
     }
 }
 
-function takeTurn(squareId, player) {
+function playComputer(square) {
+	if (typeof brd[square.target.id] == 'number') {
+	takeTurnComputer(square.target.id, pX)
+	if (!checkWin(brd, pX) && !checkDrawComputer()) takeTurnComputer(bestMove(), pO);
+	}
+}
+
+function takeTurnHuman(squareId, player) {
 brd[squareId] = player;
 document.getElementById(squareId).innerText = player;
 let winResult = checkWin(brd, player)
-if (winResult) gameOver(winResult)
+if (winResult) gameOverHuman(winResult)
+}
+
+function takeTurnComputer(squareId, player) {
+	brd[squareId] = player;
+	document.getElementById(squareId).innerText = player;
+	let winResult = checkWin(brd, player)
+	if (winResult) gameOverComputer(winResult)
 }
 
 function bestMove() {
@@ -62,15 +84,26 @@ break;
 return winResult;
 }
 
-function gameOver(winResult) {
+function gameOverHuman(winResult) {
 for (let index of cmb[winResult.index]) {
 document.getElementById(index).style.backgroundColor =
 winResult.player == pX ? "blue" : "red";
 }
 for (var i = 0; i < cls.length; i++) {
-cls[i].removeEventListener('click', play, false);
+cls[i].removeEventListener('click', playHuman, false);
 }
 announceWinner(winResult.player == pX ? "Победил X!" : "Победил O!");
+}
+
+function gameOverComputer(winResult) {
+	for (let index of cmb[winResult.index]) {
+	document.getElementById(index).style.backgroundColor =
+	winResult.player == pX ? "blue" : "red";
+	}
+	for (var i = 0; i < cls.length; i++) {
+	cls[i].removeEventListener('click', playComputer, false);
+	}
+	announceWinner(winResult.player == pX ? "Вы победили!" : "Вы проиграли.");
 }
 
 function announceWinner(who) {
@@ -82,16 +115,28 @@ function emptySquares() {
 return brd.filter(s => typeof s == 'number');
 }
 
-function checkDraw() {
+function checkDrawHuman() {
 if (emptySquares().length == 0) {
 for (var i = 0; i < cls.length; i++) {
 cls[i].style.backgroundColor = "green";
-cls[i].removeEventListener('click', play, false);
+cls[i].removeEventListener('click', playHuman, false);
 }
 announceWinner("Ничья!")
 return true;
 }
 return false;
+}
+
+function checkDrawComputer() {
+	if (emptySquares().length == 0) {
+	for (var i = 0; i < cls.length; i++) {
+	cls[i].style.backgroundColor = "green";
+	cls[i].removeEventListener('click', playComputer, false);
+	}
+	announceWinner("Ничья!")
+	return true;
+	}
+	return false;
 }
 
 function minimax(newBoard, player) {

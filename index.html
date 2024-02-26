@@ -28,7 +28,15 @@
 	<div class="end">
 		<div class="txt">Ты проиграл</div>
 	</div>
-	<button onClick="start()" style="display: block; margin: 40px auto;">Заново</button>
+	<div class="radio-container">
+		<label>
+			<input type="radio" name="player" value="human" checked> С игроком
+		</label>
+		<label>
+			<input type="radio" name="player" value="computer"> С компьютером
+		</label>
+	</div>
+	<button onClick="start()" style="display: block; margin: 40px auto;">Новая игра</button>
 	<script src="js/script.js"></script>
 </body>
 </html>
