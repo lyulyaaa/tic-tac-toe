@@ -8,7 +8,7 @@
 <body>
 <small>by Lyulya</small>
   <h2>Крестики-нолики</h2>
-	<table>
+	<table id="gameTable">
 		<tr>
 			<td class="cell" id="0"></td>
 			<td class="cell" id="1"></td>
@@ -34,6 +34,14 @@
 		</label>
 		<label>
 			<input type="radio" name="player" value="computer"> С компьютером
+		</label>
+	</div>
+	<div id="difficulty" style="display: none;" class="radio-container">
+		<label>
+			<select id="difficulty-select">
+				<option value="easy">Легкий</option>
+				<option value="hard">Сложный</option>
+			</select>
 		</label>
 	</div>
 	<button onClick="start()" style="display: block; margin: 40px auto;">Новая игра</button>

@@ -12,6 +12,20 @@ const cmb = [
 [6, 4, 2]
 ]
 
+document.querySelectorAll('input[name="player"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+		var humanPlayer = document.querySelector('input[name="player"]:checked').value;
+		if (humanPlayer === 'human') {
+			document.getElementById('difficulty').style.display = 'none';
+			document.getElementById('gameTable').style.top = "260px";
+		}
+		else{
+			document.getElementById('difficulty').style.display = '';
+			document.getElementById('gameTable').style.top = "300px";
+		}
+    });
+});
+
 const cls = document.querySelectorAll('.cell');
 start();
 
@@ -49,7 +63,19 @@ function playHuman(square) {
 function playComputer(square) {
 	if (typeof brd[square.target.id] == 'number') {
 	takeTurnComputer(square.target.id, pX)
-	if (!checkWin(brd, pX) && !checkDrawComputer()) takeTurnComputer(bestMove(), pO);
+	if (!checkWin(brd, pX) && !checkDrawComputer())
+	{
+		let difficulty = document.getElementById('difficulty-select').value;
+		if (difficulty === 'hard'){
+			takeTurnComputer(bestMove(), pO);
+		}
+		else{
+			let availableSquares = emptySquares();
+            let randomSquareIndex = Math.floor(Math.random() * availableSquares.length);
+            let randomSquareId = availableSquares[randomSquareIndex];
+			takeTurnComputer(randomSquareId, pO);
+		}
+	}
 	}
 }
 
