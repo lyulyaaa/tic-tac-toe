@@ -1,6 +1,13 @@
 var brd;
+let isSoundEnabled = false;
+var imgSound = document.getElementById('playMute');
 const pX = 'X';
 const pO = 'O';
+const clickSound = document.getElementById("click");
+const drawSound = document.getElementById("draw");
+const loseSound = document.getElementById("lose");
+const winSound = document.getElementById("win");
+const whoNext = document.getElementById("whoNext");
 const cmb = [
 [0, 1, 2],
 [3, 4, 5],
@@ -11,6 +18,24 @@ const cmb = [
 [0, 4, 8],
 [6, 4, 2]
 ]
+
+document.addEventListener("keydown", toggleSoundOnKeyPress);
+
+function toggleSoundOnKeyPress(event) {
+	if (event.keyCode === 77) {
+	  toggleSound();
+	}
+  }
+
+function toggleSound() {
+	if (isSoundEnabled) {
+		imgSound.src = "img/mute.png";
+	} else {
+		imgSound.src = "img/play.png";
+	}
+	
+	isSoundEnabled = !isSoundEnabled;
+  }
 
 document.querySelectorAll('input[name="player"]').forEach(function(radio) {
     radio.addEventListener('change', function() {
@@ -26,10 +51,30 @@ document.querySelectorAll('input[name="player"]').forEach(function(radio) {
     });
 });
 
+function blinkSymbols(currentPlayer) {
+	shape = "X";
+	if (currentPlayer === pX){
+		shape = "O";
+	}
+	else{
+		shape = "X";
+	}
+
+    whoNext.innerText = shape;
+    whoNext.style.color = currentPlayer === pX ? "red" : "blue";
+}
+
 const cls = document.querySelectorAll('.cell');
 start();
 
 function start() {
+whoNext.style.display="none";
+winSound.pause();
+winSound.currentTime = 0;
+drawSound.pause();
+drawSound.currentTime = 0;
+loseSound.pause();
+loseSound.currentTime = 0;
 document.querySelector(".end").style.display = "none";
 brd = Array.from(Array(9).keys());
 for (var i = 0; i < cls.length; i++) {
@@ -51,18 +96,28 @@ function playHuman(square) {
     var currentPlayer = (brd.filter(s => typeof s == 'number').length % 2 == 0) ? pO : pX;
     if (typeof brd[square.target.id] == 'number') {
         takeTurnHuman(square.target.id, currentPlayer);
+		if (isSoundEnabled)
+		{
+		clickSound.play();
+		}
+		whoNext.style.display="block";
         let winResult = checkWin(brd, currentPlayer);
         if (winResult) {
             gameOverHuman(winResult);
         } else {
             checkDrawHuman();
         }
+		blinkSymbols(currentPlayer);
     }
 }
 
 function playComputer(square) {
 	if (typeof brd[square.target.id] == 'number') {
 	takeTurnComputer(square.target.id, pX)
+	if (isSoundEnabled)
+		{
+		clickSound.play();
+		}
 	if (!checkWin(brd, pX) && !checkDrawComputer())
 	{
 		let difficulty = document.getElementById('difficulty-select').value;
@@ -111,6 +166,7 @@ return winResult;
 }
 
 function gameOverHuman(winResult) {
+whoNext.style.display="none";
 for (let index of cmb[winResult.index]) {
 document.getElementById(index).style.backgroundColor =
 winResult.player == pX ? "blue" : "red";
@@ -119,6 +175,9 @@ for (var i = 0; i < cls.length; i++) {
 cls[i].removeEventListener('click', playHuman, false);
 }
 announceWinner(winResult.player == pX ? "Победил X!" : "Победил O!");
+if (isSoundEnabled){
+	winSound.play();
+}
 }
 
 function gameOverComputer(winResult) {
@@ -129,7 +188,18 @@ function gameOverComputer(winResult) {
 	for (var i = 0; i < cls.length; i++) {
 	cls[i].removeEventListener('click', playComputer, false);
 	}
-	announceWinner(winResult.player == pX ? "Вы победили!" : "Вы проиграли.");
+	if (winResult.player == pX){
+		announceWinner("Вы победили!");
+		if (isSoundEnabled){
+			winSound.play();
+		}
+	}
+	else{
+		announceWinner("Вы проиграли.");
+		if (isSoundEnabled){
+			loseSound.play();
+		}
+	}
 }
 
 function announceWinner(who) {
@@ -147,6 +217,10 @@ for (var i = 0; i < cls.length; i++) {
 cls[i].style.backgroundColor = "green";
 cls[i].removeEventListener('click', playHuman, false);
 }
+if (isSoundEnabled){
+	drawSound.play();
+}
+whoNext.style.display="none";
 announceWinner("Ничья!")
 return true;
 }
@@ -158,6 +232,9 @@ function checkDrawComputer() {
 	for (var i = 0; i < cls.length; i++) {
 	cls[i].style.backgroundColor = "green";
 	cls[i].removeEventListener('click', playComputer, false);
+	}
+	if (isSoundEnabled){
+		drawSound.play();
 	}
 	announceWinner("Ничья!")
 	return true;
@@ -210,3 +287,7 @@ if(player === pO) {
 }
 return moves[bestMove];
 }
+
+console.log("Игра 'Крестики-нолики' разработан Lyulya.");
+console.log("blinkSymbols(currentPlayer): Функция, которая меняет текст и цвет элемента с идентификатором whoNext, отображая текущего игрока. Также эта функция осуществляет эффект моргания, изменяя текст на 'X' или 'O' и цвета текста.")
+console.log("start(): Функция, которая запускается при начале игры. Она сбрасывает игровое поле, устанавливает начальные значения, добавляет обработчики событий для клеток игрового поля в зависимости от выбранного режима игры.");

@@ -7,7 +7,7 @@
 </head>
 <body>
 <small>by Lyulya</small>
-  <h2>Крестики-нолики</h2>
+<h2>Крестики-нолики <img id="playMute" src="img/mute.png" alt="Mute" onclick="toggleSound()"></h2>
 	<table id="gameTable">
 		<tr>
 			<td class="cell" id="0"></td>
@@ -25,6 +25,7 @@
 			<td class="cell" id="8"></td>
 		</tr>
 	</table>
+	<label class="blinking" id="whoNext" style="margin-top: 520px; position: absolute; font-size: 30pt; left: 40%; display: none;">X</label>
 	<div class="end">
 		<div class="txt">Ты проиграл</div>
 	</div>
@@ -45,6 +46,10 @@
 		</label>
 	</div>
 	<button onClick="start()" style="display: block; margin: 40px auto;">Новая игра</button>
+	<audio id="click" src="sound/click.mp3"></audio>
+	<audio id="draw" src="sound/draw.mp3"></audio>
+	<audio id="lose" src="sound/lose.mp3"></audio>
+	<audio id="win" src="sound/win.mp3"></audio>
 	<script src="js/script.js"></script>
 </body>
 </html>
